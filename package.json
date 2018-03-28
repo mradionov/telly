@@ -2,10 +2,22 @@
   "name": "telly",
   "version": "0.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/main.js",
+  "author": "Michael Radionov (https://github.com/mradionov)",
+  "license": "MIT",
+  "bin": "bin/telly",
   "scripts": {
+    "lint": "eslint src",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Michael Radionov (https://github.com/mradionov)",
-  "license": "MIT"
+  "dependencies": {
+    "inquirer": "^5.2.0",
+    "mkdirp": "^0.5.1",
+    "xdg-basedir": "^3.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-import": "^2.9.0"
+  }
 }
