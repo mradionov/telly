@@ -4,6 +4,10 @@
   "description": "",
   "main": "src/main.js",
   "author": "Michael Radionov (https://github.com/mradionov)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mradionov/telly"
+  },
   "license": "MIT",
   "bin": "bin/telly",
   "scripts": {
