@@ -2,17 +2,30 @@ const inquirer = require('inquirer');
 
 const questions = [
   {
+    type: 'input',
     name: 'name',
     message: 'Name:',
+  },
+  {
     type: 'input',
+    name: 'reference',
+    message: 'Reference:',
+  },
+  {
+    type: 'input',
+    name: 'source',
+    message: 'Source path:',
+  },
+  {
+    type: 'input',
+    name: 'sdk',
+    message: 'SDK CLI path:',
   },
 ];
 
-const commandAdd = async (cache) => {
+const commandAdd = async ({ cache }) => {
   const answers = await inquirer.prompt(questions);
   const target = answers;
-
-  await cache.load();
 
   const targets = cache.get('targets', []);
   targets.push(target);

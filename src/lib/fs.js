@@ -34,7 +34,7 @@ exports.readJSON = async (path, defaultValue = {}) => {
 };
 
 exports.writeJSON = async (path, data) => {
-  const json = JSON.stringify(data);
+  const json = JSON.stringify(data, null, 2);
   return this.writeFile(path, json);
 };
 

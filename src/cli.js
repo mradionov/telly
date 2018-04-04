@@ -4,17 +4,47 @@ const { CACHE_PATH } = require('./config/paths');
 
 const cache = new Store(CACHE_PATH);
 
-const args = process.argv.slice(2);
-const commandName = args[0];
+async function execute(commandName) {
+  await cache.load();
 
-async function main() {
+  const targets = cache.get('targets', []);
+  const targetName = cache.get('use');
+  const target = targets.find(t => t.name === targetName);
+
+  const dependencies = {
+    cache,
+    target,
+  };
+
+  const targetlessCommands = ['use', 'add'];
+
+  if (!targetlessCommands.includes(commandName) && target === undefined) {
+    const isSuccessful = await commands.use(dependencies);
+    if (isSuccessful) {
+      execute(commandName);
+      return true;
+    }
+    return false;
+  }
+
   switch (commandName) {
     case 'add':
-      commands.add(cache);
+      commands.add(dependencies);
+      break;
+    case 'debug':
+      commands.debug(dependencies);
+      break;
+    case 'use':
+      commands.use(dependencies);
       break;
     default:
       break;
   }
+
+  return true;
 }
 
-main();
+const args = process.argv.slice(2);
+const commandName = args[0];
+
+execute(commandName);
