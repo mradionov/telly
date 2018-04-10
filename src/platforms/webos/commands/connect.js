@@ -5,7 +5,7 @@ const errorTypes = require('../errors');
 const webosCommandConnect = async ({ log, shell, target }) => {
   let command = `${trimEndSlashes(target.sdk)}/`;
   command += 'ares-novacom --getkey';
-  command += ` -d ${target.reference}`;
+  command += ` --device ${target.name}`;
 
   try {
     const { stdout, stderr } = await shell.execute(command);
@@ -14,7 +14,7 @@ const webosCommandConnect = async ({ log, shell, target }) => {
     const { message } = err;
 
     if (message.includes(errorTypes.NO_DEVICE_MATCHING)) {
-      log.error('Device not found by reference.', target.reference);
+      log.error('Device not found by name.', target.name);
       return;
     }
     if (message.includes(errorTypes.NO_SSH_KEY)) {

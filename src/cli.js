@@ -18,6 +18,7 @@ async function execute(commandName) {
     cache,
     log,
     shell,
+    platforms,
   };
 
   switch (commandName) {

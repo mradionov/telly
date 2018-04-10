@@ -1,17 +1,12 @@
 const inquirer = require('inquirer');
 
-const { PLATFORM_TIZEN, PLATFORM_WEBOS } = require('../config/constants');
-
-const platforms = [
-  PLATFORM_TIZEN,
-  PLATFORM_WEBOS,
-];
+const { ALL_PLATFORMS } = require('../config/constants');
 
 const questions = [
   {
     type: 'list',
     name: 'platform',
-    choices: platforms,
+    choices: ALL_PLATFORMS,
     message: 'Platform:',
   },
   {
@@ -21,13 +16,8 @@ const questions = [
   },
   {
     type: 'input',
-    name: 'reference',
-    message: 'Reference:',
-  },
-  {
-    type: 'input',
-    name: 'id',
-    message: 'App ID:',
+    name: 'host',
+    message: 'Device IP address:',
   },
   {
     type: 'input',
@@ -41,9 +31,19 @@ const questions = [
   },
 ];
 
-const commandAdd = async ({ cache }) => {
+const commandAdd = async (dependencies) => {
+  const { cache, platforms } = dependencies;
+
   const answers = await inquirer.prompt(questions);
   const target = answers;
+
+  const platform = platforms[target.platform];
+
+  try {
+    await platform.add(dependencies, target);
+  } catch (err) {
+    throw err;
+  }
 
   const targets = cache.get('targets', []);
   targets.push(target);
