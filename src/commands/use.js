@@ -1,9 +1,9 @@
 const inquirer = require('inquirer');
 
-const commandUse = async ({ cache }) => {
+const commandUse = async ({ cache, log }) => {
   const targets = cache.get('targets', []);
   if (targets.length === 0) {
-    console.log('No targets available');
+    log.info('No targets available. Please #add one.');
     return false;
   }
 

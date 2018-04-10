@@ -1,7 +1,4 @@
-const inquirer = require('inquirer');
-
-const commandDebug = async ({ cache, target }) => {
-  console.log('kek', target);
-};
+const commandDebug = (dependencies, platform) =>
+  platform.debug(dependencies);
 
 module.exports = commandDebug;

@@ -1,6 +1,19 @@
 const inquirer = require('inquirer');
 
+const { PLATFORM_TIZEN, PLATFORM_WEBOS } = require('../config/constants');
+
+const platforms = [
+  PLATFORM_TIZEN,
+  PLATFORM_WEBOS,
+];
+
 const questions = [
+  {
+    type: 'list',
+    name: 'platform',
+    choices: platforms,
+    message: 'Platform:',
+  },
   {
     type: 'input',
     name: 'name',
@@ -10,6 +23,11 @@ const questions = [
     type: 'input',
     name: 'reference',
     message: 'Reference:',
+  },
+  {
+    type: 'input',
+    name: 'id',
+    message: 'App ID:',
   },
   {
     type: 'input',

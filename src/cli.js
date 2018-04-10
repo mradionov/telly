@@ -1,41 +1,65 @@
 const commands = require('./commands');
-const Store = require('./lib/Store');
+const platforms = require('./platforms');
+
+const Cache = require('./lib/Cache');
+const Logger = require('./lib/Logger');
+const Shell = require('./lib/Shell');
+
 const { CACHE_PATH } = require('./config/paths');
 
-const cache = new Store(CACHE_PATH);
+const cache = new Cache(CACHE_PATH);
+const log = new Logger('telly');
+const shell = new Shell({ log });
 
 async function execute(commandName) {
   await cache.load();
 
+  const commonDependencies = {
+    cache,
+    log,
+    shell,
+  };
+
+  switch (commandName) {
+    case 'use':
+      commands.use(commonDependencies);
+      return true;
+    case 'add':
+      commands.add(commonDependencies);
+      return true;
+    default:
+      break;
+  }
+
   const targets = cache.get('targets', []);
   const targetName = cache.get('use');
   const target = targets.find(t => t.name === targetName);
-
-  const dependencies = {
-    cache,
-    target,
-  };
-
-  const targetlessCommands = ['use', 'add'];
-
-  if (!targetlessCommands.includes(commandName) && target === undefined) {
-    const isSuccessful = await commands.use(dependencies);
-    if (isSuccessful) {
-      execute(commandName);
-      return true;
-    }
+  if (target === undefined) {
+    log.info('No active targets. Please #use one.');
     return false;
   }
 
+  const platform = platforms[target.platform];
+  if (platform === undefined) {
+    log.error('Unknown platform.', target.platform);
+    return false;
+  }
+
+  const dependencies = {
+    ...commonDependencies,
+    platform,
+    target,
+  };
+
   switch (commandName) {
-    case 'add':
-      commands.add(dependencies);
+    case 'connect':
+      commands.connect(dependencies, platform);
       break;
     case 'debug':
-      commands.debug(dependencies);
+      commands.debug(dependencies, platform);
       break;
     case 'use':
-      commands.use(dependencies);
+      commands.use(dependencies, platform);
       break;
     default:
       break;

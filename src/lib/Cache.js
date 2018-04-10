@@ -2,7 +2,7 @@ const pathHelper = require('path');
 
 const fs = require('./fs');
 
-class Store {
+class Cache {
   constructor(path) {
     this.path = path;
     this.data = {};
@@ -46,4 +46,4 @@ class Store {
   }
 }
 
-module.exports = Store;
+module.exports = Cache;
