@@ -1,6 +1,6 @@
 const { trimEndSlashes } = require('../../../utils/string');
 
-const errorTypes = require('../errors');
+const outputs = require('../outputs');
 
 const webosCommandDebug = async ({ log, shell, target }) => {
   let command = `${trimEndSlashes(target.sdk)}/`;
@@ -15,7 +15,7 @@ const webosCommandDebug = async ({ log, shell, target }) => {
   } catch (err) {
     const { message } = err;
 
-    if (message.includes(errorTypes.NO_DEVICE_MATCHING)) {
+    if (message.includes(outputs.NO_DEVICE_MATCHING)) {
       log.error('Device not found by reference.', target.reference);
       return;
     }

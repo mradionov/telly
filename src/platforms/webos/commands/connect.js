@@ -1,6 +1,6 @@
 const { trimEndSlashes } = require('../../../utils/string');
 
-const errorTypes = require('../errors');
+const outputs = require('../outputs');
 
 const webosCommandConnect = async ({ log, shell, target }) => {
   let command = `${trimEndSlashes(target.sdk)}/`;
@@ -13,11 +13,11 @@ const webosCommandConnect = async ({ log, shell, target }) => {
   } catch (err) {
     const { message } = err;
 
-    if (message.includes(errorTypes.NO_DEVICE_MATCHING)) {
+    if (message.includes(outputs.NO_DEVICE_MATCHING)) {
       log.error('Device not found by name.', target.name);
       return;
     }
-    if (message.includes(errorTypes.NO_SSH_KEY)) {
+    if (message.includes(outputs.NO_SSH_KEY)) {
       log.error('Connection failed. Turn on "Key server" in "Developer Mode".');
       return;
     }
