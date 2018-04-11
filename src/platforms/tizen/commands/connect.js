@@ -13,6 +13,10 @@ const tizenCommandConnect = async ({ log, shell, target }) => {
       log.info('Already connected.');
       return;
     }
+    if (stdout.includes(outputs.CONNECTED)) {
+      log.info('Connected.');
+      return;
+    }
     log.debug('UNHANDLED OUTPUT', { stdout, stderr });
   } catch (err) {
     throw err;
