@@ -1,15 +1,18 @@
-const { trimEndSlashes } = require('../../../utils/string');
-
 const outputs = require('../outputs');
 
 const webosCommandConnect = async ({ log, shell, target }) => {
-  let command = `${trimEndSlashes(target.sdk)}/`;
-  command += 'ares-novacom --getkey';
-  command += ` --device ${target.name}`;
+  const command = {
+    sdk: target.sdk,
+    bin: 'ares-novacom',
+    args: [
+      '--getkey',
+      '--device', target.name,
+    ],
+  };
 
   try {
     const { stdout, stderr } = await shell.execute(command);
-    log.debug('out', { stdout, stderr });
+    log.debug('UNHANDLED OUTPUT', { stdout, stderr });
   } catch (err) {
     const { message } = err;
 

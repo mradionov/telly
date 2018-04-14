@@ -4,7 +4,7 @@ const fs = require('../../../lib/fs');
 
 const outputs = require('../outputs');
 
-const webosCommandDebug = async ({ log, shell, target }) => {
+const webosCommandInstall = async ({ log, shell, target }, packDirPath) => {
   const appInfoPath = pathHelper.join(target.source, 'appinfo.json');
   const appInfo = await fs.readJSON(appInfoPath, null);
   if (appInfo === null) {
@@ -12,15 +12,17 @@ const webosCommandDebug = async ({ log, shell, target }) => {
     return;
   }
 
-  const { id } = appInfo;
+  const { id, version } = appInfo;
+
+  const packName = `${id}_${version}_all.ipk`;
+  const packPath = pathHelper.join(packDirPath, packName);
 
   const command = {
     sdk: target.sdk,
-    bin: 'ares-inspect',
+    bin: 'ares-install',
     args: [
       '--device', target.name,
-      '--app', id,
-      '--open',
+      packPath,
     ],
   };
 
@@ -34,14 +36,9 @@ const webosCommandDebug = async ({ log, shell, target }) => {
       log.error('Connection timeout.');
       return;
     }
-    if (message.includes(outputs.NO_DEVICE_MATCHING)) {
-      log.error('Device not found by reference.', target.reference);
-      return;
-    }
 
     throw err;
   }
 };
 
-module.exports = webosCommandDebug;
-
+module.exports = webosCommandInstall;

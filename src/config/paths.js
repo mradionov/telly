@@ -10,3 +10,4 @@ const moduleDirPath = pathHelper.join(userDirPath, moduleDirName);
 const cacheFileName = 'cache.json';
 
 exports.CACHE_PATH = pathHelper.join(moduleDirPath, cacheFileName);
+exports.PACK_DIR_PATH = pathHelper.join(moduleDirPath, 'pack');

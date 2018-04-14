@@ -1,11 +1,13 @@
-const { trimEndSlashes } = require('../../../utils/string');
-
 const outputs = require('../outputs');
 
 const tizenCommandConnect = async ({ log, shell, target }) => {
-  let command = `${trimEndSlashes(target.sdk)}/`;
-  command += 'tools/sdb';
-  command += ` connect ${target.host}`;
+  const command = {
+    sdk: target.sdk,
+    bin: 'tools/sdb',
+    args: [
+      'connect', target.host,
+    ],
+  };
 
   try {
     const { stdout, stderr } = await shell.execute(command);
