@@ -62,6 +62,9 @@ async function execute(commandName) {
     case 'install':
       commands.install(dependencies, platform);
       break;
+    case 'launch':
+      commands.launch(dependencies, platform);
+      break;
     case 'pack':
       commands.pack(dependencies, platform);
       break;
