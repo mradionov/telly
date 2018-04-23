@@ -2,6 +2,7 @@ const commands = require('./commands');
 const platforms = require('./platforms');
 
 const Cache = require('./lib/Cache');
+const CommandError = require('./lib/CommandError');
 const Logger = require('./lib/Logger');
 const Shell = require('./lib/Shell');
 
@@ -9,6 +10,9 @@ const { CACHE_PATH } = require('./config/paths');
 
 const cache = new Cache(CACHE_PATH);
 const log = new Logger('telly');
+const raise = (err, ...args) => {
+  throw new CommandError(err, ...args);
+};
 const shell = new Shell({ log });
 
 async function execute(commandName) {
@@ -16,18 +20,18 @@ async function execute(commandName) {
 
   const commonDependencies = {
     cache,
+    commands,
     log,
-    shell,
     platforms,
+    raise,
+    shell,
   };
 
   switch (commandName) {
     case 'use':
-      commands.use(commonDependencies);
-      return true;
+      return commands.use(commonDependencies);
     case 'add':
-      commands.add(commonDependencies);
-      return true;
+      return commands.add(commonDependencies);
     default:
       break;
   }
@@ -37,13 +41,13 @@ async function execute(commandName) {
   const target = targets.find(t => t.name === targetName);
   if (target === undefined) {
     log.info('No active targets. Please #use one.');
-    return false;
+    return Promise.reject();
   }
 
   const platform = platforms[target.platform];
   if (platform === undefined) {
     log.error('Unknown platform.', target.platform);
-    return false;
+    return Promise.reject();
   }
 
   const dependencies = {
@@ -54,31 +58,36 @@ async function execute(commandName) {
 
   switch (commandName) {
     case 'connect':
-      commands.connect(dependencies, platform);
-      break;
+      return commands.connect(dependencies);
+    case 'debug':
+      return commands.debug(dependencies);
     case 'inspect':
-      commands.inspect(dependencies, platform);
-      break;
+      return commands.inspect(dependencies);
     case 'install':
-      commands.install(dependencies, platform);
-      break;
+      return commands.install(dependencies);
     case 'launch':
-      commands.launch(dependencies, platform);
-      break;
+      return commands.launch(dependencies);
     case 'pack':
-      commands.pack(dependencies, platform);
-      break;
+      return commands.pack(dependencies);
+    case 'run':
+      return commands.run(dependencies);
     case 'use':
-      commands.use(dependencies, platform);
-      break;
+      return commands.use(dependencies);
     default:
       break;
   }
 
-  return true;
+  return Promise.reject();
 }
 
 const args = process.argv.slice(2);
 const commandName = args[0];
 
-execute(commandName);
+execute(commandName)
+  .catch((err) => {
+    if (err instanceof CommandError) {
+      log.error(...err.args);
+    } else {
+      log.error(err);
+    }
+  });

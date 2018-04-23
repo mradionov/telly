@@ -4,11 +4,13 @@ const fs = require('../../../lib/fs');
 
 const outputs = require('../outputs');
 
-const webosCommandLaunch = async ({ log, shell, target }) => {
+const webosCommandLaunch = async ({
+  log, raise, shell, target,
+}) => {
   const appInfoPath = pathHelper.join(target.source, 'appinfo.json');
   const appInfo = await fs.readJSON(appInfoPath, null);
   if (appInfo === null) {
-    log.error('Could not find appinfo.json in source directory.');
+    raise('Could not find appinfo.json in source directory.');
     return;
   }
 
@@ -30,8 +32,7 @@ const webosCommandLaunch = async ({ log, shell, target }) => {
     const { message } = err;
 
     if (message.includes(outputs.CONNECTION_TIMEOUT)) {
-      log.error('Connection timeout.');
-      return;
+      raise('Connection timeout.');
     }
 
     throw err;

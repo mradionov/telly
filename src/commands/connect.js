@@ -1,4 +1,4 @@
-const commandConnect = (dependencies, platform) =>
-  platform.connect(dependencies);
+const commandConnect = dependencies =>
+  dependencies.platform.connect(dependencies);
 
 module.exports = commandConnect;

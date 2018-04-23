@@ -1,6 +1,8 @@
 const outputs = require('../outputs');
 
-const webosCommandConnect = async ({ log, shell, target }) => {
+const webosCommandConnect = async ({
+  log, raise, shell, target,
+}) => {
   const command = {
     sdk: target.sdk,
     bin: 'ares-novacom',
@@ -17,12 +19,11 @@ const webosCommandConnect = async ({ log, shell, target }) => {
     const { message } = err;
 
     if (message.includes(outputs.NO_DEVICE_MATCHING)) {
-      log.error('Device not found by name.', target.name);
-      return;
+      raise('Device not found by name.', target.name);
     }
+
     if (message.includes(outputs.NO_SSH_KEY)) {
-      log.error('Connection failed. Turn on "Key server" in "Developer Mode".');
-      return;
+      raise('Connection failed. Turn on "Key server" in "Developer Mode".');
     }
 
     throw err;
