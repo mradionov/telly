@@ -4,7 +4,7 @@ const fs = require('../../../lib/fs');
 
 const outputs = require('../outputs');
 
-const webosCommandDebug = async ({ log, shell, target }) => {
+const webosCommandInspect = async ({ log, shell, target }) => {
   const appInfoPath = pathHelper.join(target.source, 'appinfo.json');
   const appInfo = await fs.readJSON(appInfoPath, null);
   if (appInfo === null) {
@@ -43,5 +43,5 @@ const webosCommandDebug = async ({ log, shell, target }) => {
   }
 };
 
-module.exports = webosCommandDebug;
+module.exports = webosCommandInspect;
 

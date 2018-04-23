@@ -56,8 +56,8 @@ async function execute(commandName) {
     case 'connect':
       commands.connect(dependencies, platform);
       break;
-    case 'debug':
-      commands.debug(dependencies, platform);
+    case 'inspect':
+      commands.inspect(dependencies, platform);
       break;
     case 'install':
       commands.install(dependencies, platform);
