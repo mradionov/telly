@@ -1,8 +1,14 @@
+const inquirer = require('inquirer');
+
+const messages = require('../messages');
 const outputs = require('../outputs');
 
 const webosCommandConnect = async ({
-  log, raise, shell, target,
+  log, shell, target,
+  CommandError, Deferred,
 }) => {
+  log.info('Connecting...');
+
   const command = {
     sdk: target.sdk,
     bin: 'ares-novacom',
@@ -12,22 +18,55 @@ const webosCommandConnect = async ({
     ],
   };
 
-  try {
-    const { stdout, stderr } = await shell.execute(command);
-    log.debug('UNHANDLED OUTPUT', { stdout, stderr });
-  } catch (err) {
-    const { message } = err;
+  const deferred = new Deferred();
 
-    if (message.includes(outputs.NO_DEVICE_MATCHING)) {
-      raise('Device not found by name.', target.name);
+  const proc = shell.spawn(command);
+
+  proc.stdout.on('data', async (data) => {
+    const message = data.toString();
+
+    if (message.includes(outputs.CONNECT_PASSPHRASE)) {
+      const answers = await inquirer.prompt([{
+        type: 'input',
+        name: 'passphrase',
+        message: 'Passphrase:',
+      }]);
+
+      const { passphrase } = answers;
+
+      proc.stdin.write(passphrase);
+
+      deferred.resolve();
+      return;
+    }
+
+    log.error('UNHANDLED STDOUT', message);
+  });
+
+
+  proc.stderr.on('data', (data) => {
+    const message = data.toString();
+    const ignoredMessages = [
+      'ares-novacom',
+    ];
+
+    if (ignoredMessages.includes(message)) {
+      return;
     }
 
     if (message.includes(outputs.NO_SSH_KEY)) {
-      raise('Connection failed. Turn on "Key server" in "Developer Mode".');
+      deferred.reject(new CommandError(messages.CONNECTION_FAILED));
+      return;
     }
 
-    throw err;
-  }
+    log.error('UNHANDLED STDERR', message);
+  });
+
+  proc.on('error', (err) => {
+    deferred.reject(err);
+  });
+
+  return deferred.promise;
 };
 
 module.exports = webosCommandConnect;

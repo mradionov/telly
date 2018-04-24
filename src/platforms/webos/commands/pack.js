@@ -1,6 +1,8 @@
 const outputs = require('../outputs');
 
-const webosCommandPack = async ({ log, raise, shell, target }, packDirPath) => {
+const webosCommandPack = async ({ log, shell, target }, packDirPath) => {
+  log.info('Packing...');
+
   const command = {
     sdk: target.sdk,
     bin: 'ares-package',

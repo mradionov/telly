@@ -3,6 +3,7 @@ const platforms = require('./platforms');
 
 const Cache = require('./lib/Cache');
 const CommandError = require('./lib/CommandError');
+const Deferred = require('./lib/Deferred');
 const Logger = require('./lib/Logger');
 const Shell = require('./lib/Shell');
 
@@ -10,9 +11,6 @@ const { CACHE_PATH } = require('./config/paths');
 
 const cache = new Cache(CACHE_PATH);
 const log = new Logger('telly');
-const raise = (err, ...args) => {
-  throw new CommandError(err, ...args);
-};
 const shell = new Shell({ log });
 
 async function execute(commandName) {
@@ -23,8 +21,9 @@ async function execute(commandName) {
     commands,
     log,
     platforms,
-    raise,
     shell,
+    CommandError,
+    Deferred,
   };
 
   switch (commandName) {

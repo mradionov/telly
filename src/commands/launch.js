@@ -1,4 +1,4 @@
-const commandLaunch = async (dependencies, platform) =>
-  platform.launch(dependencies);
+const commandLaunch = async dependencies =>
+  dependencies.platform.launch(dependencies);
 
 module.exports = commandLaunch;

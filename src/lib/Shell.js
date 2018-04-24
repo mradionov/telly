@@ -23,6 +23,17 @@ class Shell {
       });
     });
   }
+
+  spawn({ sdk = '', bin = '', args = [] } = {}) {
+    const baseCommand = pathHelper.join(sdk, bin);
+    const fullCommand = `${baseCommand} ${args.join(' ')}`;
+
+    this.log.debug(fullCommand);
+
+    const proc = childProcess.spawn(baseCommand, args);
+
+    return proc;
+  }
 }
 
 module.exports = Shell;

@@ -5,12 +5,15 @@ const fs = require('../../../lib/fs');
 const outputs = require('../outputs');
 
 const webosCommandInspect = async ({
-  log, raise, shell, target,
+  log, shell, target,
+  CommandError,
 }) => {
+  log.info('Inspecting...');
+
   const appInfoPath = pathHelper.join(target.source, 'appinfo.json');
   const appInfo = await fs.readJSON(appInfoPath, null);
   if (appInfo === null) {
-    raise('Could not find appinfo.json in source directory.');
+    throw new CommandError('Could not find appinfo.json in source directory.');
   }
 
   const { id } = appInfo;
@@ -32,11 +35,14 @@ const webosCommandInspect = async ({
     const { message } = err;
 
     if (message.includes(outputs.CONNECTION_TIMEOUT)) {
-      raise('Connection timeout.');
+      throw new CommandError('Connection timeout.');
     }
 
     if (message.includes(outputs.NO_DEVICE_MATCHING)) {
-      raise('Device not found by reference.', target.reference);
+      throw new CommandError(
+        'Device not found by reference.',
+        target.reference,
+      );
     }
 
     throw err;

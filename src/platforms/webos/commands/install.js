@@ -5,13 +5,15 @@ const fs = require('../../../lib/fs');
 const outputs = require('../outputs');
 
 const webosCommandInstall = async ({
-  log, raise, shell, target,
+  log, shell, target,
+  CommandError,
 }, packDirPath) => {
+  log.info('Installing...');
+
   const appInfoPath = pathHelper.join(target.source, 'appinfo.json');
   const appInfo = await fs.readJSON(appInfoPath, null);
   if (appInfo === null) {
-    raise('Could not find appinfo.json in source directory.');
-    return;
+    throw new CommandError('Could not find appinfo.json in source directory.');
   }
 
   const { id, version } = appInfo;
@@ -30,12 +32,22 @@ const webosCommandInstall = async ({
 
   try {
     const { stdout, stderr } = await shell.execute(command);
+
+    if (stdout.includes(outputs.INSTALL_SUCCESS)) {
+      log.info('Installed.');
+      return;
+    }
+
     log.debug('UNHANDLED OUTPUT', { stdout, stderr });
   } catch (err) {
     const { message } = err;
 
     if (message.includes(outputs.CONNECTION_TIMEOUT)) {
-      raise('Connection timeout.');
+      throw new CommandError('Connection timeout.');
+    }
+
+    if (message.includes(outputs.INSTALL_PASSPHRASE_INVALID)) {
+      throw new CommandError('Invalid passphrase.');
     }
 
     throw err;
