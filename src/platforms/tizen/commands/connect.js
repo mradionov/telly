@@ -19,6 +19,11 @@ const tizenCommandConnect = async ({ log, shell, target }) => {
       log.info('Connected.');
       return;
     }
+    if (stdout.includes(outputs.CONNECT_FAILED)) {
+      // TODO: log as list
+      log.error('Connection failed. Is TV turned on? Is IP correct? Have you added host ip to tv dev tools?');
+      return;
+    }
     log.debug('UNHANDLED OUTPUT', { stdout, stderr });
   } catch (err) {
     throw err;
