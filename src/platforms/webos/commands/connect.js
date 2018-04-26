@@ -24,6 +24,14 @@ const webosCommandConnect = async ({
 
   proc.stdout.on('data', async (data) => {
     const message = data.toString();
+    const ignoredMessages = [
+      'SSH Private Key',
+    ];
+
+    const isIgnored = ignoredMessages.some(m => message.match(m));
+    if (isIgnored) {
+      return;
+    }
 
     if (message.includes(outputs.CONNECT_PASSPHRASE)) {
       const answers = await inquirer.prompt([{
@@ -32,11 +40,15 @@ const webosCommandConnect = async ({
         message: 'Passphrase:',
       }]);
 
+      // TODO: cache passphrase
+
       const { passphrase } = answers;
 
       proc.stdin.write(passphrase);
 
+      // TODO: add actual check if passphrase was correct
       deferred.resolve();
+      log.info('Connected.');
       return;
     }
 
@@ -50,7 +62,8 @@ const webosCommandConnect = async ({
       'ares-novacom',
     ];
 
-    if (ignoredMessages.includes(message)) {
+    const isIgnored = ignoredMessages.some(m => message.match(m));
+    if (isIgnored) {
       return;
     }
 

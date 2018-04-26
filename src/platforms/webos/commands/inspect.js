@@ -30,6 +30,12 @@ const webosCommandInspect = async ({
 
   try {
     const { stdout, stderr } = await shell.execute(command);
+
+    if (stdout.includes(outputs.INSPECT_SUCCESS)) {
+      log.info('Inspected.');
+      return;
+    }
+
     log.debug('UNHANDLED OUTPUT', { stdout, stderr });
   } catch (err) {
     const { message } = err;

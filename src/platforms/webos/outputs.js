@@ -8,3 +8,4 @@ exports.CONNECT_PASSPHRASE = 'input passphrase';
 exports.INSTALL_PASSPHRASE_INVALID = 'ERR! uncaughtException InvalidAsn1Error:';
 exports.INSTALL_SUCCESS = 'Success';
 exports.LAUNCH_SUCCESS = 'Launched application';
+exports.INSPECT_SUCCESS = 'Application Debugging';
