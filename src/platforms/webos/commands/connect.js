@@ -24,14 +24,6 @@ const webosCommandConnect = async ({
 
   proc.stdout.on('data', async (data) => {
     const message = data.toString();
-    const ignoredMessages = [
-      'SSH Private Key',
-    ];
-
-    const isIgnored = ignoredMessages.some(m => message.match(m));
-    if (isIgnored) {
-      return;
-    }
 
     if (message.includes(outputs.CONNECT_PASSPHRASE)) {
       const answers = await inquirer.prompt([{
@@ -52,23 +44,31 @@ const webosCommandConnect = async ({
       return;
     }
 
+    const ignoredMessages = [
+      'SSH Private Key',
+    ];
+    const isIgnored = ignoredMessages.some(m => message.match(m));
+    if (isIgnored) {
+      return;
+    }
+
     log.error('UNHANDLED STDOUT', message);
   });
 
 
   proc.stderr.on('data', (data) => {
     const message = data.toString();
-    const ignoredMessages = [
-      'ares-novacom',
-    ];
-
-    const isIgnored = ignoredMessages.some(m => message.match(m));
-    if (isIgnored) {
-      return;
-    }
 
     if (message.includes(outputs.NO_SSH_KEY)) {
       deferred.reject(new CommandError(messages.CONNECTION_FAILED));
+      return;
+    }
+
+    const ignoredMessages = [
+      'ares-novacom',
+    ];
+    const isIgnored = ignoredMessages.some(m => message.match(m));
+    if (isIgnored) {
       return;
     }
 
