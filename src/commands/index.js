@@ -4,6 +4,7 @@ const debug = require('./debug');
 const inspect = require('./inspect');
 const install = require('./install');
 const launch = require('./launch');
+const list = require('./list');
 const pack = require('./pack');
 const run = require('./run');
 const use = require('./use');
@@ -15,6 +16,7 @@ const commands = {
   inspect,
   install,
   launch,
+  list,
   pack,
   run,
   use,

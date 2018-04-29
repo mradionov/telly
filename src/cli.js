@@ -16,26 +16,30 @@ const shell = new Shell({ log });
 async function execute(commandName) {
   await cache.load();
 
+  const targets = cache.get('targets', []);
+
   const commonDependencies = {
     cache,
     commands,
     log,
     platforms,
     shell,
+    targets,
     CommandError,
     Deferred,
   };
 
   switch (commandName) {
-    case 'use':
-      return commands.use(commonDependencies);
     case 'add':
       return commands.add(commonDependencies);
+    case 'list':
+      return commands.list(commonDependencies);
+    case 'use':
+      return commands.use(commonDependencies);
     default:
       break;
   }
 
-  const targets = cache.get('targets', []);
   const targetName = cache.get('use');
   const target = targets.find(t => t.name === targetName);
   if (target === undefined) {
