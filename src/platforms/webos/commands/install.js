@@ -10,13 +10,13 @@ const webosCommandInstall = async ({
 }, packDirPath) => {
   log.info('Installing...');
 
-  const appInfoPath = pathHelper.join(target.source, 'appinfo.json');
-  const appInfo = await fs.readJSON(appInfoPath, null);
-  if (appInfo === null) {
-    throw new CommandError('Could not find appinfo.json in source directory.');
+  const configPath = pathHelper.join(target.source, 'appinfo.json');
+  const config = await fs.readJSON(configPath);
+  if (config === null) {
+    throw new CommandError('Could not load appinfo.json from source directory.');
   }
 
-  const { id, version } = appInfo;
+  const { id, version } = config;
 
   const packName = `${id}_${version}_all.ipk`;
   const packPath = pathHelper.join(packDirPath, packName);

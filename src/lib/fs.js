@@ -1,6 +1,7 @@
 const fs = require('fs');
 
 const mkdirp = require('mkdirp');
+const xml2js = require('xml2js');
 
 exports.readFile = path => new Promise((resolve, reject) => {
   fs.readFile(path, 'utf8', (err, data) => {
@@ -22,7 +23,7 @@ exports.writeFile = (path, data) => new Promise((resolve, reject) => {
   });
 });
 
-exports.readJSON = async (path, defaultValue = {}) => {
+exports.readJSON = async (path, defaultValue = null) => {
   const json = await this.readFile(path);
   let data = defaultValue;
   try {
@@ -36,6 +37,20 @@ exports.readJSON = async (path, defaultValue = {}) => {
 exports.writeJSON = async (path, data) => {
   const json = JSON.stringify(data, null, 2);
   return this.writeFile(path, json);
+};
+
+exports.readXML = async (path, defaultValue = null) => {
+  const xml = await this.readFile(path);
+
+  return new Promise((resolve, reject) => {
+    xml2js.parseString(xml, (err, result) => {
+      if (err) {
+        console.log(err);
+        return;
+      }
+      resolve(result);
+    });
+  });
 };
 
 exports.makeDir = path => new Promise((resolve, reject) => {

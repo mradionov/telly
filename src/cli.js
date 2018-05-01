@@ -7,6 +7,7 @@ const Deferred = require('./lib/Deferred');
 const Logger = require('./lib/Logger');
 const Shell = require('./lib/Shell');
 const TargetRepository = require('./lib/TargetRepository');
+const fs = require('./lib/fs');
 
 const { CACHE_PATH } = require('./config/paths');
 
@@ -28,6 +29,7 @@ async function execute(commandName) {
   const commonDependencies = {
     cache,
     commands,
+    fs,
     log,
     platforms,
     shell,
