@@ -6,6 +6,7 @@ const CommandError = require('./lib/CommandError');
 const Deferred = require('./lib/Deferred');
 const Logger = require('./lib/Logger');
 const Shell = require('./lib/Shell');
+const TargetRepository = require('./lib/TargetRepository');
 
 const { CACHE_PATH } = require('./config/paths');
 
@@ -16,7 +17,13 @@ const shell = new Shell({ log });
 async function execute(commandName) {
   await cache.load();
 
-  const targets = cache.get('targets', []);
+  const targetRepository = new TargetRepository({
+    targets: cache.get('targets', []),
+    onSave: (targets) => {
+      cache.set('targets', targets);
+      return cache.save();
+    },
+  });
 
   const commonDependencies = {
     cache,
@@ -24,7 +31,7 @@ async function execute(commandName) {
     log,
     platforms,
     shell,
-    targets,
+    targetRepository,
     CommandError,
     Deferred,
   };
@@ -41,16 +48,14 @@ async function execute(commandName) {
   }
 
   const targetName = cache.get('use');
-  const target = targets.find(t => t.name === targetName);
+  const target = targetRepository.findOneByName(targetName);
   if (target === undefined) {
-    log.info('No active targets. Please #use one.');
-    return Promise.reject();
+    throw new CommandError('No active targets. Please #use one.');
   }
 
   const platform = platforms[target.platform];
   if (platform === undefined) {
-    log.error('Unknown platform.', target.platform);
-    return Promise.reject();
+    throw new CommandError('Unknown platform.', target.platform);
   }
 
   const dependencies = {
@@ -64,6 +69,8 @@ async function execute(commandName) {
       return commands.connect(dependencies);
     case 'debug':
       return commands.debug(dependencies);
+    case 'edit':
+      return commands.edit(dependencies);
     case 'inspect':
       return commands.inspect(dependencies);
     case 'install':

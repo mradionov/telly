@@ -47,3 +47,5 @@ exports.makeDir = path => new Promise((resolve, reject) => {
     }
   });
 });
+
+exports.exists = path => new Promise(resolve => fs.exists(path, resolve));

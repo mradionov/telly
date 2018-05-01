@@ -9,7 +9,7 @@ const tizenCommandPack = async ({ log, shell, target }, packDirPath) => {
     args: [
       'package',
       '--type', 'wgt',
-      '--sign', 'mradionov',
+      '--sign', 'telly-security-profile',
       '--output', packDirPath,
       '--', target.source,
     ],

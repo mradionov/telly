@@ -16,6 +16,12 @@ class Shell {
     return new Promise((resolve, reject) => {
       childProcess.exec(command, (err, stdout, stderr) => {
         if (err) {
+          // Even if process finishes with non-zero status code it might still
+          // have and output.
+          // eslint-disable-next-line no-param-reassign
+          err.stdout = stdout;
+          // eslint-disable-next-line no-param-reassign
+          err.stderr = stderr;
           reject(err);
         } else {
           resolve({ stdout, stderr });

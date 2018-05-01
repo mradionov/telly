@@ -27,15 +27,20 @@ const questions = [
   {
     type: 'input',
     name: 'sdk',
-    message: 'SDK CLI path:',
+    message: 'SDK path:',
   },
 ];
 
 const commandAdd = async (dependencies) => {
-  const { cache, platforms } = dependencies;
+  const { CommandError, platforms, targetRepository } = dependencies;
 
   const answers = await inquirer.prompt(questions);
   const target = answers;
+
+  const existingTarget = targetRepository.findOneByName(target.name);
+  if (existingTarget !== undefined) {
+    throw new CommandError(`Target with name "${target.name}" already exists`);
+  }
 
   const platform = platforms[target.platform];
 
@@ -45,11 +50,8 @@ const commandAdd = async (dependencies) => {
     throw err;
   }
 
-  const targets = cache.get('targets', []);
-  targets.push(target);
-  cache.set('targets', targets);
-
-  await cache.save();
+  targetRepository.add(target);
+  await targetRepository.save();
 };
 
 module.exports = commandAdd;
