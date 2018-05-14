@@ -8,11 +8,10 @@ class Shell {
 
   async execute({ sdk = '', bin = '', args = [] } = {}) {
     const baseCommand = pathHelper.join(sdk, bin);
-    const cleanArgs = args
-      .map(arg => arg.replace(' ', '\\ '))
-      .join(' ');
+    const cleanArgs = args.map(arg => arg.replace(' ', '\\ '));
+    const cleanArgsStr = cleanArgs.join(' ');
 
-    const command = `${baseCommand} ${cleanArgs}`;
+    const command = `${baseCommand} ${cleanArgsStr}`;
 
     this.log.debug(command);
 
@@ -35,11 +34,10 @@ class Shell {
 
   spawn({ sdk = '', bin = '', args = [] } = {}) {
     const baseCommand = pathHelper.join(sdk, bin);
-    const cleanArgs = args
-      .map(arg => arg.replace(' ', '\\ '))
-      .join(' ');
+    const cleanArgs = args.map(arg => arg.replace(' ', '\\ '));
+    const cleanArgsStr = cleanArgs.join(' ');
 
-    const fullCommand = `${baseCommand} ${cleanArgs}`;
+    const fullCommand = `${baseCommand} ${cleanArgsStr}`;
 
     this.log.debug(fullCommand);
 
