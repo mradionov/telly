@@ -1,7 +1,7 @@
 const inquirer = require('inquirer');
 
 const commandEdit = async (dependencies) => {
-  const { target, targetRepository } = dependencies;
+  const { platform, target, targetRepository } = dependencies;
 
   const questions = [
     {
@@ -36,6 +36,8 @@ const commandEdit = async (dependencies) => {
   // TODO: if name changed
   // - check if already taken
   // - remove existing cache directories
+
+  await platform.edit(dependencies, updatedTarget);
 
   targetRepository.update(target.name, updatedTarget);
   await targetRepository.save();

@@ -5,7 +5,7 @@ const webosCommandPack = async ({ log, shell, target }, packDirPath) => {
 
   const command = {
     sdk: target.sdk,
-    bin: 'ares-package',
+    bin: 'CLI/bin/ares-package',
     args: [
       '--outdir', packDirPath,
       target.source,

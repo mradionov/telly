@@ -11,7 +11,7 @@ const webosCommandConnect = async ({
 
   const command = {
     sdk: target.sdk,
-    bin: 'ares-novacom',
+    bin: 'CLI/bin/ares-novacom',
     args: [
       '--getkey',
       '--device', target.name,

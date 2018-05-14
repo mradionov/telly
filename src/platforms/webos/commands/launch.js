@@ -20,7 +20,7 @@ const webosCommandLaunch = async ({
 
   const command = {
     sdk: target.sdk,
-    bin: 'ares-launch',
+    bin: 'CLI/bin/ares-launch',
     args: [
       '--device', target.name,
       id,

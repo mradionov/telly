@@ -4,6 +4,7 @@ exports.NO_SSH_KEY = 'Error: Failed to get ssh private key';
 exports.PACK_SUCCESS = 'Success';
 exports.ADD_SUCCESS = 'name      deviceinfo';
 exports.ADD_EXISTS = 'ERR! ares-setup-device: Error: Existing Target Name';
+exports.EDIT_SUCCESS = 'name      deviceinfo';
 exports.CONNECT_PASSPHRASE = 'input passphrase';
 exports.INSTALL_PASSPHRASE_INVALID = 'ERR! uncaughtException InvalidAsn1Error:';
 exports.INSTALL_SUCCESS = 'Success';

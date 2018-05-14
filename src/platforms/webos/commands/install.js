@@ -23,7 +23,7 @@ const webosCommandInstall = async ({
 
   const command = {
     sdk: target.sdk,
-    bin: 'ares-install',
+    bin: 'CLI/bin/ares-install',
     args: [
       '--device', target.name,
       packPath,

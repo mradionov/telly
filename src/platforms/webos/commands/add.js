@@ -1,9 +1,11 @@
 const outputs = require('../outputs');
 
 const webosCommandAdd = async ({ log, shell, CommandError }, target) => {
+  log.info('Adding...');
+
   const command = {
     sdk: target.sdk,
-    bin: 'ares-setup-device',
+    bin: 'CLI/bin/ares-setup-device',
     args: [
       '--add', target.name,
       '--info', `"name=${target.name}"`,

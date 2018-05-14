@@ -25,8 +25,6 @@ const commandUse = async (dependencies) => {
   const target = targetRepository.findOneByName(name);
   const platform = platforms[target.platform];
 
-  await platform.use(dependencies, target);
-
   cache.set('use', name);
 
   await cache.save();

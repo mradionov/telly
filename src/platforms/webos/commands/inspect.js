@@ -20,7 +20,7 @@ const webosCommandInspect = async ({
 
   const command = {
     sdk: target.sdk,
-    bin: 'ares-inspect',
+    bin: 'CLI/bin/ares-inspect',
     args: [
       '--device', target.name,
       '--app', id,
