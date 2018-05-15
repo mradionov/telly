@@ -1,6 +1,8 @@
 const outputs = require('../outputs');
 
-const tizenCommandConnect = async ({ log, shell, target }) => {
+const tizenCommandConnect = async ({
+  log, shell, target, CommandError,
+}) => {
   const command = {
     sdk: target.sdk,
     bin: 'tools/sdb',
@@ -26,6 +28,13 @@ const tizenCommandConnect = async ({ log, shell, target }) => {
     }
     log.debug('UNHANDLED OUTPUT', { stdout, stderr });
   } catch (err) {
+    const { stdout } = err;
+
+    if (stdout.includes(outputs.CONNECT_FAILED_IP)) {
+      // TODO: as list
+      throw new CommandError('Connection failed. Is TV turned on? Is IP correct? Have you added host ip to tv dev tools?');
+    }
+
     throw err;
   }
 };
